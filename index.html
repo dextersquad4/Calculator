@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="header">Calculator</div>
+    <div class="calculator">
+        <nav class="display" id="display"></nav>
+        <nav class="buttons">
+            <nav class="button-grid" id="button-grid">
+                <button class="1">1</button>
+                <button class="2">2</button>
+                <button class="3">3</button>
+                <button class="4">4</button>
+                <button class="5">5</button>
+                <button class="6">6</button>
+                <button class="7">7</button>
+                <button class="8">8</button>
+                <button class="9">9</button>
+                <button class="clear">clear</button>
+                <button class="0">0</button>
+                <button class="+/-">+/-</button>
+            </nav>
+            <nav class="operators" id="operators">
+                <button class="+">+</button>
+                <button class="-">-</button>
+                <button class="*">*</button>
+                <button class="/">/</button>
+                <button class="=">=</button>
+            </nav>
+        </nav>
+    </div>
+    <div class="footer">Created by Dean Liang</div>
+
+     <script>
+
+        let FirstNum;
+        let Operator;
+        let SecondNum;
+        let DigitCount = 0;
+        let DummyNumber;
+        let numberCount = 1;
+        let displayString;
+        let finalAnswer;
+        let operatorCount = 0;
+
+
+        function add(a,b) {
+           finalAnswer = (a + b); 
+        }
+
+        function subtract(a,b) {
+            finalAnswer = (a - b);
+        }
+
+        function multiply(a,b) {
+            finalAnswer = (a * b);
+        }
+
+        function divide(a,b) {
+            finalAnswer = (a / b);
+        }
+
+        function operate(FirstNum, Operator, SecondNum) {
+            if (Operator == "+") add(FirstNum,SecondNum);
+            else if (Operator == "-") subtract(FirstNum,SecondNum);
+            else if (Operator == "*") multiply(FirstNum,SecondNum);
+            else if (Operator == "/") divide(FirstNum,SecondNum);
+            else console.log("ERROR");
+        }
+
+        let display = document.getElementById('display');
+
+        let NumberButtonsContainer = document.getElementById('button-grid');
+        let NumberButtons = NumberButtonsContainer.getElementsByTagName('button');
+
+
+        for (let i = 0; i < NumberButtons.length; i ++) {
+            NumberButtons[i].addEventListener('click', function(event) {
+                if (event.target.textContent === 'clear') {
+                    FirstNum = 0;
+                    Operator = 0;
+                    SecondNum = 0;
+                    DigitCount = 0;
+                    numberCount = 1;
+                    display.innerText = '';
+                    operatorCount = 0;
+                    return;
+                }
+                
+                if (event.target.textContent == '+/-') {
+                    if (numberCount === 1) {
+                        FirstNum = (FirstNum * -1);
+                        display.innerText = FirstNum.toFixed(3);
+                    }else  {
+                        SecondNum = (SecondNum * -1);
+                        display.innerText = SecondNum.toFixed(3);
+                    }
+                    return;
+                }
+
+                DummyNumber = Number(event.target.textContent);
+                if (numberCount === 1) firstNumberCreation(DummyNumber);
+                if (numberCount >= 2) secondNumberCreation(DummyNumber);
+                
+            });
+        }
+
+        function firstNumberCreation(DummyNumber) {
+            if (DigitCount == 0) {
+                FirstNum = DummyNumber;
+            }
+            else {
+                FirstNum = Number(FirstNum) * 10 + DummyNumber
+            };
+            DigitCount += 1; 
+            
+            display.innerText = FirstNum;
+        }
+
+        function secondNumberCreation(DummyNumber) {
+            if (DigitCount == 0) {
+                SecondNum = DummyNumber;
+            }
+            else {
+                SecondNum = Number(SecondNum) * 10 + DummyNumber
+            };
+            DigitCount += 1;  
+
+            display.innerText = SecondNum;
+        }
+    
+        let OperatorButtonsContainer = document.getElementById('operators');
+        let OperatorButtons = OperatorButtonsContainer.getElementsByTagName('button');
+
+        for (let i = 0; i < OperatorButtons.length; i ++) {
+            OperatorButtons[i].addEventListener('click', function(event) {
+                if (event.target.textContent === '=') clearDataDisplay();
+
+                operatorCount += 1;
+
+                if (operatorCount === 2) {
+                    operate(FirstNum, Operator, SecondNum);
+                    FirstNum = finalAnswer.toFixed(3);
+                    display.innerText = FirstNum;
+                    operatorCount = 1;
+                    SecondNum = 0;
+                    numberCount = 1;
+                }
+                Operator = event.target.textContent;
+                
+                DigitCount = 0;
+                numberCount += 1;
+            });
+        }
+
+        function clearDataDisplay() {
+            operate(FirstNum, Operator, SecondNum)
+            FirstNum = finalAnswer;
+            Operator = 0;
+            SecondNum = 0;
+            DigitCount = 0;
+            numberCount = 0;
+            operatorCount = -1;
+            display.innerText = FirstNum.toFixed(3);
+
+        }
+
+
+        
+    </script>
+</body>
+</html>
