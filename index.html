@@ -78,7 +78,6 @@
         let NumberButtonsContainer = document.getElementById('button-grid');
         let NumberButtons = NumberButtonsContainer.getElementsByTagName('button');
 
-
         for (let i = 0; i < NumberButtons.length; i ++) {
             NumberButtons[i].addEventListener('click', function(event) {
                 if (event.target.textContent === 'clear') {
@@ -88,6 +87,7 @@
                     DigitCount = 0;
                     numberCount = 1;
                     display.innerText = '';
+
                     operatorCount = 0;
                     return;
                 }
@@ -110,6 +110,27 @@
             });
         }
 
+        function calculateFontSize(number) {
+            const maxDigits = 10; // Set your desired maximum number of digits
+            const baseFontSize = 100; // Set your initial font size
+            const minFontSize = 65; // Set a minimum font size to prevent excessive shrinking
+
+            // Calculate the font size based on the number of digits
+            let fontSize = baseFontSize;
+
+            if (number.toString().length > maxDigits) {
+                const scaleFactor = Math.pow(0.8, (number.toString().length - maxDigits));
+                fontSize = Math.max(minFontSize, baseFontSize * scaleFactor);
+            }
+
+            return fontSize + 'px';
+        }
+
+        function updateDisplayText(value) {
+            display.innerText = value;
+            display.style.fontSize = calculateFontSize(Number(value));
+        }
+
         function firstNumberCreation(DummyNumber) {
             if (DigitCount == 0) {
                 FirstNum = DummyNumber;
@@ -120,6 +141,8 @@
             DigitCount += 1; 
             
             display.innerText = FirstNum;
+            display.style.fontSize = calculateFontSize(FirstNum);
+            updateDisplayText(FirstNum);
         }
 
         function secondNumberCreation(DummyNumber) {
@@ -132,6 +155,8 @@
             DigitCount += 1;  
 
             display.innerText = SecondNum;
+            display.style.fontSize = calculateFontSize(SecondNum);
+            updateDisplayText(SecondNum);
         }
     
         let OperatorButtonsContainer = document.getElementById('operators');
